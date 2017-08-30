@@ -3,8 +3,16 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import os
 from sqlalchemy.orm import sessionmaker
 from tabledef import *
+from pymongo import MongoClient
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
+connection = MongoClient("mongodb://user:password@ds137882.mlab.com:37882/blueberry-muffins")
+db = connection['blueberry-muffins']
+collection = db.users
+users = {'sophie': 'wargo'}
+
+id = collection.insert_one(users).inserted_id
+
 
 app = Flask(__name__)
 
