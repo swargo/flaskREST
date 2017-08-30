@@ -1,32 +1,44 @@
-from flask import Flask, render_template
-from flask_restful import Resource, Api
-from flask_pymongo import PyMongo
-from wtforms import Form, StringField, SubmitField
+from flask import Flask
+from flask import Flask, flash, redirect, render_template, request, session, abort
+import os
+from sqlalchemy.orm import sessionmaker
+from tabledef import *
+
+engine = create_engine('sqlite:///tutorial.db', echo=True)
 
 app = Flask(__name__)
-api = Api(app)
 
-app.config['MONGO3_HOST'] = 'mongodb://admin:password@ds137882.mlab.com:37882/blueberry-muffins'
-app.config['MONGO3_DBNAME'] = 'blueberry-muffins'
-mongo3 = PyMongo(app, config_prefix='MONGO3')
-
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
-# api.add_resource(HelloWorld, '/')
-
-if __name__ == '__main__':
-    app.run(debug=True)
 
 @app.route('/')
-def home_page():
-    online_users = mongo3.db.users.find({'online': True})
-    return render_template('index.html',
-        online_users=online_users)
+def home():
+    if not session.get('logged_in'):
+        return render_template('login.html')
+    else:
+        return "Hello Boss!  <a href='/logout'>Logout</a>"
 
-@app.route('/user/<username>')
-def user_profile(username):
-    user = mongo3.db.users.find_one_or_404({'_id': username})
-    return render_template('user.html',
-        user=user)
+
+@app.route('/login', methods=['POST'])
+def do_admin_login():
+    POST_USERNAME = str(request.form['username'])
+    POST_PASSWORD = str(request.form['password'])
+
+    Session = sessionmaker(bind=engine)
+    s = Session()
+    query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]))
+    result = query.first()
+    if result:
+        session['logged_in'] = True
+    else:
+        flash('wrong password!')
+    return home()
+
+
+@app.route("/logout")
+def logout():
+    session['logged_in'] = False
+    return home()
+
+
+if __name__ == "__main__":
+    app.secret_key = os.urandom(12)
+    app.run(debug=True, port=4000)
