@@ -7,8 +7,10 @@ box-sizing: border-box;
 }
 body {
 font-family: Arial;
-background-color: #3498DB;
 padding: 50px;
+  background:url(
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAhUlEQVQoU2NkIBIwwtTdNNn6H8RWP+ONVQwsCFIkl6sP1vNo8kWwYnQxsML/tjfApoHAjxQeBo45X+A0TByikPUkXCGI/61PgoGr6AWK6+Hu+aB0GEUxsiqBe7aMcIUgids6EA8hA9UrEM+hKAQJ7DWeD1fsfDYRLo+hEKYYWRFWE3GFPwB+pTOrwX4M1AAAAABJRU5ErkJggg==
+    ) repeat;
 }
 .login {
 margin: 20px auto;

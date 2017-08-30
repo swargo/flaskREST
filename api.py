@@ -9,7 +9,7 @@ engine = create_engine('sqlite:///tutorial.db', echo=True)
 connection = MongoClient("mongodb://user:password@ds137882.mlab.com:37882/blueberry-muffins")
 db = connection['blueberry-muffins']
 collection = db.users
-users = {'sophie': 'wargo'}
+#users = {'sophie': 'wargo'}
 
 id = collection.insert_one(users).inserted_id
 
