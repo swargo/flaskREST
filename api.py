@@ -46,13 +46,16 @@ def getPassword():
         url = request.form.get('url')
         passw = request.form.get('password')
         notes = request.form.get('notes')
-        loginInfo = {"websiteName": websiteName, "website": url, "password": passw, "infoNotes": notes, "userId": id}
+        loginInfo = { websiteName: { "websiteName": websiteName, "website": url, "password": passw, "infoNotes": notes, "userId": id }}
         collection.insert_one(loginInfo)
         return loginInfo
     elif request.method == 'GET':
-        info = request.form.get('website')
-        collection.find_one({"websiteName": info})
-        return info
+        pws = ""
+        cursor = collection.find({})
+        for document in cursor:
+            pws = pws + str(document)
+            print(str(document))
+        return pws
 
 
 @app.route("/logout")
