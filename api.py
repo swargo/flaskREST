@@ -38,12 +38,21 @@ def do_admin_login():
         flash('wrong password!')
     return home()
 
-@app.route('/:appname', methods=['GET', 'POST'])
+@app.route('/loginmanager', methods=['GET', 'POST'])
 def getPassword():
     if request.method=='POST':
-        pass
+        websiteName = request.form.get('website')
+        id = request.form.get('userId')
+        url = request.form.get('url')
+        passw = request.form.get('password')
+        notes = request.form.get('notes')
+        loginInfo = {"websiteName": websiteName, "website": url, "password": passw, "infoNotes": notes, "userId": id}
+        collection.insert_one(loginInfo)
+        return loginInfo
     elif request.method == 'GET':
-        pass
+        info = request.form.get('website')
+        collection.find_one({"websiteName": info})
+        return info
 
 
 @app.route("/logout")
