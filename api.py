@@ -1,4 +1,3 @@
-from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 from sqlalchemy.orm import sessionmaker
@@ -9,10 +8,9 @@ engine = create_engine('sqlite:///tutorial.db', echo=True)
 connection = MongoClient("mongodb://user:password@ds137882.mlab.com:37882/blueberry-muffins")
 db = connection['blueberry-muffins']
 collection = db.users
-#users = {'sophie': 'wargo'}
+# users = {'sophie': 'wargo'}
 
-id = collection.insert_one(users).inserted_id
-
+# id = collection.insert_one(users).inserted_id
 
 app = Flask(__name__)
 
@@ -39,6 +37,13 @@ def do_admin_login():
     else:
         flash('wrong password!')
     return home()
+
+@app.route('/:appname', methods=['GET', 'POST'])
+def getPassword():
+    if request.method=='POST':
+        pass
+    elif request.method == 'GET':
+        pass
 
 
 @app.route("/logout")
