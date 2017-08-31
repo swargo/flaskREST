@@ -10,12 +10,7 @@ allUsers = Table('users', metadata, autoload=True)
 connection = MongoClient("mongodb://user:password@ds137882.mlab.com:37882/blueberry-muffins")
 db = connection['blueberry-muffins']
 collection = db.users
-# users = {'sophie': 'wargo'}
-
-# id = collection.insert_one(users).inserted_id
-
 app = Flask(__name__)
-
 
 @app.route('/')
 def home():
@@ -60,9 +55,9 @@ def getPassword():
         url = request.form.get('url')
         passw = request.form.get('password')
         notes = request.form.get('notes')
-        loginInfo = { websiteName: { "websiteName": websiteName, "website": url, "password": passw, "infoNotes": notes, "userId": id }}
+        loginInfo = { "websiteName" : websiteName, "website": url, "password": passw, "infoNotes": notes, "userId": id }
         collection.insert_one(loginInfo)
-        return loginInfo
+        return str(loginInfo)
     elif request.method == 'GET':
         pws = ""
         cursor = collection.find({})
