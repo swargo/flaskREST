@@ -5,6 +5,8 @@ from tabledef import *
 from pymongo import MongoClient
 
 engine = create_engine('sqlite:///tutorial.db', echo=True)
+metadata = MetaData(bind=engine)
+allUsers = Table('users', metadata, autoload=True)
 connection = MongoClient("mongodb://user:password@ds137882.mlab.com:37882/blueberry-muffins")
 db = connection['blueberry-muffins']
 collection = db.users
@@ -36,6 +38,18 @@ def do_admin_login():
         session['logged_in'] = True
     else:
         flash('wrong password!')
+    return home()
+
+@app.route('/register', methods=['POST'])
+def do_admin_register():
+    POST_USERNAME = str(request.form['username'])
+    POST_PASSWORD = str(request.form['password'])
+
+    Session = sessionmaker(bind=engine)
+    s = Session()
+    con = engine.connect()
+    con.execute(allUsers.insert(), name=POST_USERNAME, password=POST_PASSWORD)
+
     return home()
 
 @app.route('/loginmanager', methods=['GET', 'POST'])
